@@ -1,109 +1,99 @@
 <div align="center">
   <img src="logo.svg" alt="GoFileCLI Logo" width="500"/>
-
-  # GoFileCLI
-  
-  *The missing command-line companion for [GoFile.io](https://gofile.io/)*
-  
-  [![Python](https://img.shields.io/badge/python-3.6+-blue.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org)
-  [![GoFile](https://img.shields.io/badge/API-GoFile-orange.svg?style=flat-square)](https://gofile.io/api)
-  [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](LICENSE)
-  [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/yourusername/gofilecli/issues)
+  <h1>GoFileCLI</h1>
+  <p><i>The missing command-line companion for <a href="https://gofile.io/">GoFile.io</a></i></p>
+  <p>
+    <a href="https://www.python.org"><img src="https://img.shields.io/badge/python-3.6+-blue.svg?style=flat-square&logo=python&logoColor=white" alt="Python"/></a>
+    <a href="https://gofile.io/api"><img src="https://img.shields.io/badge/API-GoFile-orange.svg?style=flat-square" alt="GoFile"/></a>
+    <a href="https://github.com/Abdo-omran2206/Gofilecli/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square" alt="Contributions Welcome"/></a>
+  </p>
 </div>
 
 ---
 
 ## 📖 Overview
 
-**GoFileCLI** is a fast, visually appealing, and highly functional Python-based Command Line Interface for uploading, managing, and tracking files on [GoFile.io](https://gofile.io/). Built with simplicity and productivity in mind, it brings the full power of GoFile directly to your terminal.
+**GoFileCLI** brings the convenience of the GoFile file-sharing platform straight to your terminal. Whether you're uploading files as a guest or managing them through your GoFile account, this tool provides a fast, seamless, and visually appealing experience. 
+
+It features built-in upload history, clipboard integration, and a beautiful terminal UI powered by Python.
 
 ## ✨ Features
 
-- ⚡ **Blazing Fast Uploads:** Upload files seamlessly without opening a browser.
-- 🗂️ **Upload History:** Automatically logs all your uploads, providing quick access to shareable links.
-- 🔐 **Account Integration:** Securely manage your GoFile token to link uploads to your main account.
-- 🎨 **Beautiful TUI:** Enjoy an intuitive terminal interface featuring stunning ASCII art and color-coded outputs.
-- ⚙️ **Customizable Settings:** Easily tweak the application's configuration to suit your workflow.
+- **📤 Fast File Uploads**: Upload files to the best available GoFile server instantly.
+- **🗂️ Upload History**: Keep track of all your uploads using a local SQLite database. View details like file size, original path, and upload timestamps.
+- **🔐 Account Management**: Add your GoFile API token to upload files directly to your account folders.
+- **📋 Clipboard Integration**: Easily copy download links to your clipboard with a single keystroke.
+- **🎨 Beautiful UI**: Enjoy a rich terminal experience with ASCII art, colored text, and neatly formatted tables.
 
-## 🚀 Quick Start
+## 🛠️ Project Structure
 
-### Prerequisites
-Ensure you have **Python 3.6** or higher installed on your system.
+```text
+GoFileCLI/
+├── main.py                # Main entry point of the CLI application
+├── lib/
+│   ├── Gofile.py          # GoFile API wrapper and logic
+│   ├── config.py          # Configuration and token management
+│   └── db.py              # SQLite database management for history
+├── screens/
+│   ├── account_menu.py    # Login/Logout and account management UI
+│   ├── history_menu.py    # Upload history table and file details UI
+│   ├── settings_menu.py   # Settings and history clearing UI
+│   └── upload_menu.py     # File upload process UI
+├── utils/
+│   └── ui.py              # Helper functions for UI styling, clearing, and clipboard
+├── data/                  # Auto-generated directory for SQLite database
+├── config/                # Auto-generated directory for configuration JSON
+└── requirements.txt       # Python dependencies
+```
 
-### Installation
+## ⚙️ Prerequisites
 
-1. **Clone the repository:**
+- **Python 3.6+**
+- Required Python packages: `requests`, `art`, `rich`, `pyperclip`
+
+## 🚀 Installation
+
+1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/gofilecli.git
-   cd gofilecli
+   git clone https://github.com/Abdo-omran2206/Gofilecli.git
+   cd Gofilecli
    ```
 
-2. **Set up a virtual environment (Optional but Recommended):**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use: venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
+2. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
 ## 💻 Usage
 
-To launch the interactive CLI, run:
+Start the CLI by running the main Python script:
 
 ```bash
 python main.py
 ```
 
-### 🧭 Navigation Menu
-Once launched, you will be greeted by the main menu:
+### Navigation & Options
 
-1. **Upload File:** Opens a prompt to specify the file path for upload.
-2. **View History:** Displays a historical list of all files you've uploaded, including file names and GoFile links.
-3. **Account:** Allows you to input and manage your GoFile API token.
-4. **Settings:** Configure application defaults (e.g., output colors, prompt behaviors).
-5. **Exit:** Safely close the CLI application.
+Upon launching, you will interact with the following options:
 
-## 📂 Project Structure
+1. **Upload File**: Provide the local file path. Once uploaded, the download link is generated and can be automatically copied to your clipboard.
+2. **View History**: Access a list of all your previous uploads. Select a file ID to view its details, re-copy the download link, or delete it from history.
+3. **Account**: Login using your GoFile API token to switch from "Guest" to "Active" status, allowing your uploads to be linked to your account.
+4. **Settings**: Clear your local upload history database or manually toggle your account status.
+5. **Exit**: Safely close the application.
 
-```text
-gofilecli/
-├── art.py              # ASCII art utilities
-├── main.py             # Application entry point
-├── requirements.txt    # Project dependencies
-├── logo.svg            # GoFileCLI Logo
-├── lib/
-│   ├── config.py       # Configuration management
-│   └── db.py           # Local database/history management
-├── screens/
-│   ├── account_menu.py # Account settings UI
-│   ├── history_menu.py # Upload history UI
-│   ├── settings_menu.py# Settings configuration UI
-│   └── upload_menu.py  # File upload UI
-└── utils/
-    └── ui.py           # Terminal color and formatting utilities
-```
+> **💡 Where to get your GoFile token?**  
+> Sign up at [gofile.io](https://gofile.io/), then go to your **Profile → API Token** to copy it.
 
-## 🤝 Contributing
+## 🗄️ Local Data
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+GoFileCLI stores its data securely on your local machine:
+- **Database**: Upload logs are stored in an SQLite database at `data/gofilecli.db`.
+- **Configuration**: Your API token and account status are stored in `config/config.json`.
 
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
-
-## 🛡️ Disclaimer
-
-This is an unofficial, community-driven client for GoFile.io. It is not affiliated with, endorsed by, or sponsored by GoFile.io. Use at your own risk.
-
-## 📜 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
+---
 
 <div align="center">
-  <i>Built with ❤️ for the terminal lovers.</i>
+  <p>Made with ❤️ by <a href="https://github.com/Abdo-omran2206">Abdo-omran2206</a></p>
+  <p>If you find this tool useful, consider giving it a ⭐ on <a href="https://github.com/Abdo-omran2206/Gofilecli">GitHub</a>!</p>
 </div>
