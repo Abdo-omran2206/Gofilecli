@@ -1,7 +1,7 @@
 from rich.console import Console
 from rich.table import Table
 from utils.ui import clear, copy_link, format_size
-from art import *
+from art import tprint
 from utils.ui import Colors
 from time import sleep
 
@@ -48,6 +48,7 @@ class History:
             print("No details found for the selected file.")
             input("Press Enter to return to the history menu...")
             self.show()
+            return
         for x in data:
             if str(x[0]) == number:
                 print(f"{Colors.Cy}")

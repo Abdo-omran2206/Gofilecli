@@ -3,68 +3,54 @@ import os
 
 class Config:
     def __init__(self):
-        if not os.path.exists('config'):
-            os.makedirs('config', exist_ok=True)
-        if not os.path.exists('config/config.json'):
-            with open('config/config.json', 'w') as f:
-                f.write('{"Account_status":"guest"}')
-    
+        self.config_dir = 'config'
+        self.config_path = os.path.join(self.config_dir, 'config.json')
+        self._data = {}
+        self._ensure_config_exists()
+        self._load()
+
+    def _ensure_config_exists(self):
+        if not os.path.exists(self.config_dir):
+            os.makedirs(self.config_dir, exist_ok=True)
+        if not os.path.exists(self.config_path):
+            with open(self.config_path, 'w', encoding='utf-8') as f:
+                json.dump({"Account_status": "guest"}, f, indent=4)
+
+    def _load(self):
+        try:
+            with open(self.config_path, 'r', encoding='utf-8') as f:
+                self._data = json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            self._data = {"Account_status": "guest"}
+            self._save()
+
+    def _save(self):
+        with open(self.config_path, 'w', encoding='utf-8') as f:
+            json.dump(self._data, f, indent=4)
+
     def get_token(self):
-        with open('config/config.json', 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                return None
-        token = data.get("UserToken", None)
-        return token
+        status = self._data.get("Account_status", "guest")
+        if status != "active":
+            return None
+        return self._data.get("UserToken")
     
     def add_token(self, token):
-        with open('config/config.json', 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                data = {}
-        data["UserToken"] = token
-        data["Account_status"] = "active"
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=4)
-            return True
-        return False
+        self._data["UserToken"] = token
+        self._data["Account_status"] = "active"
+        self._save()
+        return True
 
     def remove_token(self):
-        with open('config/config.json', 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                data = {}
-        data.pop("UserToken", None)
-        data["Account_status"] = "guest"
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=4)
-            return True
-        return False
+        self._data.pop("UserToken", None)
+        self._data["Account_status"] = "guest"
+        self._save()
+        return True
     
     def set_account_status(self):
-        with open('config/config.json', 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                data = {}
-        status = data["Account_status"]
-        if status == "active":
-            data["Account_status"] = "guest"
-        else:
-            data["Account_status"] = "active"
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=4)
-            return True
-        return False
+        status = self._data.get("Account_status", "guest")
+        self._data["Account_status"] = "active" if status != "active" else "guest"
+        self._save()
+        return True
     
     def get_account_status(self):
-        with open('config/config.json', 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                return None
-        account_status = data.get("Account_status", None)
-        return account_status
+        return self._data.get("Account_status", "guest")

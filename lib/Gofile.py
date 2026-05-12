@@ -7,11 +7,15 @@ class Gofile:
         self.api_base = "https://api.gofile.io"
 
     def checkApi(self):
-        checkApi_response = requests.get(
-            url=self.api_base
-        ).json()
-        if checkApi_response["status"] == 'ok':
-            return True
+        try:
+            checkApi_response = requests.get(
+                url=self.api_base
+            ).json()
+            if checkApi_response["status"] == 'ok':
+                return True
+        except Exception:
+            pass
+        return False
 
     def _get_best_server(self):
         response = requests.get(f"{self.api_base}/servers")
@@ -41,6 +45,38 @@ class Gofile:
             return
         with open(file_path, "rb") as f:
             files = {"file": f}
-            response = requests.post(url, data=payload, files=files)
-            
+            response = requests.post(url, data=payload, files=files)          
         return self.response_handler(response)
+    
+    def upload_folder(self, folder_path):
+
+        if not os.path.isdir(folder_path):
+            print("Folder not found")
+            return
+        
+        files = []
+        
+        for root, _, filenames in os.walk(folder_path):
+            for filename in filenames:
+                files.append(os.path.join(root, filename))
+
+        if not files:
+            print("No files found")
+            return
+        
+        results = []
+
+        first_upload = self.upload_file(files[0])
+        results.append(first_upload)
+        
+        try:
+            folder_id = first_upload["parentFolder"]
+        except:
+            print("Failed to get folderId")
+            return results
+
+        for file in files[1:]:
+            res = self.upload_file(file, Folder_Path=folder_id)
+            results.append(res)
+            
+        return results
