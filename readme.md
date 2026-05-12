@@ -19,7 +19,8 @@ It features built-in upload history, clipboard integration, and a beautiful term
 
 ## ✨ Features
 
-- **📤 Fast File Uploads**: Upload files to the best available GoFile server instantly.
+- **📤 Fast File Uploads**: Upload individual files to the best available GoFile server instantly.
+- **📁 Folder Uploads**: Upload entire folders at once — all files are grouped under a single GoFile directory (requires an API token).
 - **🗂️ Upload History**: Keep track of all your uploads using a local SQLite database. View details like file size, original path, and upload timestamps.
 - **🔐 Account Management**: Add your GoFile API token to upload files directly to your account folders.
 - **📋 Clipboard Integration**: Easily copy download links to your clipboard with a single keystroke.
@@ -38,7 +39,7 @@ GoFileCLI/
 │   ├── account_menu.py    # Login/Logout and account management UI
 │   ├── history_menu.py    # Upload history table and file details UI
 │   ├── settings_menu.py   # Settings and history clearing UI
-│   └── upload_menu.py     # File upload process UI
+│   └── upload_menu.py     # File and folder upload process UI
 ├── utils/
 │   └── ui.py              # Helper functions for UI styling, clearing, and clipboard
 ├── data/                  # Auto-generated directory for SQLite database
@@ -72,15 +73,18 @@ Start the CLI by running the main Python script:
 python main.py
 ```
 
+You can also safely exit anytime by pressing `Ctrl+C`.
+
 ### Navigation & Options
 
 Upon launching, you will interact with the following options:
 
 1. **Upload File**: Provide the local file path. Once uploaded, the download link is generated and can be automatically copied to your clipboard.
-2. **View History**: Access a list of all your previous uploads. Select a file ID to view its details, re-copy the download link, or delete it from history.
-3. **Account**: Login using your GoFile API token to switch from "Guest" to "Active" status, allowing your uploads to be linked to your account.
-4. **Settings**: Clear your local upload history database or manually toggle your account status.
-5. **Exit**: Safely close the application.
+2. **Upload Folder**: Provide a folder path to upload all files inside it as a single grouped directory on GoFile. Requires an API token — guest users will be prompted to add one first.
+3. **View History**: Access a list of all your previous uploads. Select a file ID to view its details, re-copy the download link, or delete it from history.
+4. **Account**: Login using your GoFile API token to switch from "Guest" to "Active" status, allowing your uploads to be linked to your account.
+5. **Settings**: Clear your local upload history database or manually toggle your account status.
+6. **Exit**: Safely close the application and release all resources.
 
 > **💡 Where to get your GoFile token?**  
 > Sign up at [gofile.io](https://gofile.io/), then go to your **Profile → API Token** to copy it.
