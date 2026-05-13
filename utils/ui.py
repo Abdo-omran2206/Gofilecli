@@ -1,6 +1,6 @@
 import os
 import pyperclip
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn, DownloadColumn
 from contextlib import contextmanager
 import time
 class Colors:
@@ -26,15 +26,18 @@ def format_size(size):
         size /= 1024
 
 class ProgressFile:
-    def __init__(self, file_obj, progress, task, chunk_size=1024):
+    def __init__(self, file_obj, progress, task, total_size):
         self._file = file_obj
         self._progress = progress
         self._task = task
-        self._chunk_size = chunk_size
+        self._total_size = total_size
+        self._chunk_size = 8192
+
+    def __len__(self):
+        return self._total_size
 
     def read(self, size=-1):
-        read_size = size if size is not None and size != -1 else self._chunk_size
-        chunk = self._file.read(read_size)
+        chunk = self._file.read(size)
         if chunk:
             self._progress.update(self._task, advance=len(chunk))
         return chunk
@@ -55,12 +58,16 @@ class ProgressFile:
         return self._file.close()
 
 @contextmanager
-def upload_progress_bar(file_obj, file_name, total_size, chunk_size=1024):
+def upload_progress_bar(file_obj, file_name, total_size):
     with Progress(
-        TextColumn("[bold blue]Uploading {task.fields[file_name]}"),
-        BarColumn(),
+        TextColumn("[bold blue]Uploading[/] {task.fields[file_name]}"),
+        BarColumn(bar_width=None),
         "[progress.percentage]{task.percentage:>3.0f}%",
+        "•",
+        DownloadColumn(),
+        "•",
         TransferSpeedColumn(),
+        "•",
         TimeRemainingColumn(),
     ) as progress:
 
@@ -70,4 +77,4 @@ def upload_progress_bar(file_obj, file_name, total_size, chunk_size=1024):
             file_name=file_name
         )
 
-        yield ProgressFile(file_obj, progress, task, chunk_size)
+        yield ProgressFile(file_obj, progress, task, total_size)

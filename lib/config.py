@@ -1,56 +1,36 @@
-import json
 import os
-
+from dotenv import load_dotenv , set_key
+from pathlib import Path
 class Config:
     def __init__(self):
-        self.config_dir = 'config'
-        self.config_path = os.path.join(self.config_dir, 'config.json')
-        self._data = {}
-        self._ensure_config_exists()
-        self._load()
-
-    def _ensure_config_exists(self):
-        if not os.path.exists(self.config_dir):
-            os.makedirs(self.config_dir, exist_ok=True)
-        if not os.path.exists(self.config_path):
-            with open(self.config_path, 'w', encoding='utf-8') as f:
-                json.dump({"Account_status": "guest"}, f, indent=4)
-
-    def _load(self):
-        try:
-            with open(self.config_path, 'r', encoding='utf-8') as f:
-                self._data = json.load(f)
-        except (json.JSONDecodeError, FileNotFoundError):
-            self._data = {"Account_status": "guest"}
-            self._save()
-
-    def _save(self):
-        with open(self.config_path, 'w', encoding='utf-8') as f:
-            json.dump(self._data, f, indent=4)
+        load_dotenv()
+        self.env_path = Path('.env')
+        if not self.env_path.exists():
+            self.env_path.touch()
 
     def get_token(self):
-        status = self._data.get("Account_status", "guest")
-        if status != "active":
-            return None
-        return self._data.get("UserToken")
+        return os.getenv("API_TOKEN")
     
-    def add_token(self, token):
-        self._data["UserToken"] = token
-        self._data["Account_status"] = "active"
-        self._save()
-        return True
+    def get_account_status(self):
+        return os.getenv("ACCOUNT_STATUS", 'guest')
 
+    def add_token(self, token):
+        if not token:
+            raise ValueError("Token cannot be empty")
+        if self.env_path.exists():
+            set_key(self.env_path, 'API_TOKEN', token)
+            set_key(self.env_path, 'ACCOUNT_STATUS', 'active')
+        return True
+    
     def remove_token(self):
-        self._data.pop("UserToken", None)
-        self._data["Account_status"] = "guest"
-        self._save()
+        if self.env_path.exists():
+            set_key(self.env_path, 'API_TOKEN', '')
+            set_key(self.env_path, 'ACCOUNT_STATUS', 'guest')
         return True
     
     def set_account_status(self):
-        status = self._data.get("Account_status", "guest")
-        self._data["Account_status"] = "active" if status != "active" else "guest"
-        self._save()
-        return True
-    
-    def get_account_status(self):
-        return self._data.get("Account_status", "guest")
+        if self.env_path.exists():
+            status = self.get_account_status()            
+            new_status = 'guest' if status == 'active' else 'active'
+            set_key(self.env_path, 'ACCOUNT_STATUS', new_status)
+        return True 
