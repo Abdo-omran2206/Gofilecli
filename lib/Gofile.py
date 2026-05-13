@@ -1,6 +1,6 @@
 import requests
 import os
-
+from utils.ui import upload_progress_bar
 class Gofile:
     def __init__(self, token=None):
         self.token = token
@@ -43,9 +43,19 @@ class Gofile:
         if not os.path.exists(file_path):
             print("File not found")
             return
-        with open(file_path, "rb") as f:
-            files = {"file": f}
-            response = requests.post(url, data=payload, files=files)          
+
+        file_name = os.path.basename(file_path)
+        total_size = os.path.getsize(file_path)
+
+        with open(file_path, "rb") as f, upload_progress_bar(f, file_name, total_size) as progress_file:
+            files = {
+                "file": (
+                    file_name,
+                    progress_file,
+                    "application/octet-stream"
+                )
+            }
+            response = requests.post(url, data=payload, files=files)
         return self.response_handler(response)
     
     def upload_folder(self, folder_path):
