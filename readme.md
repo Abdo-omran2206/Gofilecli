@@ -20,6 +20,7 @@ It features built-in upload history, clipboard integration, and a beautiful term
 ## ✨ Features
 
 - **📤 Fast File Uploads**: Upload individual files to the best available GoFile server instantly.
+- **📊 Premium Progress Bars**: Track your uploads with real-time speed, estimated time, and beautiful visual indicators.
 - **📁 Folder Uploads**: Upload entire folders at once — all files are grouped under a single GoFile directory (requires an API token).
 - **🗂️ Upload History**: Keep track of all your uploads using a local SQLite database. View details like file size, original path, and upload timestamps.
 - **🔐 Account Management**: Add your GoFile API token to upload files directly to your account folders.
@@ -43,14 +44,14 @@ GoFileCLI/
 ├── utils/
 │   └── ui.py              # Helper functions for UI styling, clearing, and clipboard
 ├── data/                  # Auto-generated directory for SQLite database
-├── config/                # Auto-generated directory for configuration JSON
+├── .env                   # Local configuration and API token
 └── requirements.txt       # Python dependencies
 ```
 
 ## ⚙️ Prerequisites
 
 - **Python 3.6+**
-- Required Python packages: `requests`, `art`, `rich`, `pyperclip`
+- Required Python packages: `requests`, `art`, `rich`, `pyperclip`, `python-dotenv`
 
 ## 🚀 Installation
 
@@ -93,7 +94,7 @@ Upon launching, you will interact with the following options:
 
 GoFileCLI stores its data securely on your local machine:
 - **Database**: Upload logs are stored in an SQLite database at `data/gofilecli.db`.
-- **Configuration**: Your API token and account status are stored in `config/config.json`.
+- **Configuration**: Your API token and account status are stored in `.env`.
 
 ---
 
