@@ -34,7 +34,7 @@ class Settings:
             auto_save_status = self.config.toggle_auto_save()
             if auto_save_status:
                 new_auto_save_value = self.config.get_auto_save()
-                print(f"{Colors.Gr}Auto Save History toggled successfully! New value: {new_auto_save_value}")
+                print(f"{Colors.Gr}Auto Save History toggled successfully!")
             else:
                 print(f"{Colors.Re}Failed to toggle Auto Save History.")
             input(f"{Colors.Ye}Press Enter to return to settings menu...")

@@ -1,10 +1,13 @@
+from importlib.resources import path
+
 from lib.Gofile import Gofile
 from lib.config import Config
 from utils.ui import Colors , clear , copy_link
 from art import tprint
 from time import sleep
 import os
-
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import PathCompleter
 class UploadFile:
     def __init__(self , db):
         self.db = db
@@ -12,6 +15,11 @@ class UploadFile:
         self.Token = self.config.get_token()
         self.auto_save = self.config.get_auto_save()
         self.gofile_client = Gofile(token=self.Token) # Pass your token here if you have one
+
+    def get_file_path(self):
+        completer = PathCompleter(expanduser=True)
+        path = prompt("Enter file path: ", completer=completer)
+        return path
 
     def show(self):
         
@@ -22,7 +30,7 @@ class UploadFile:
 
         self.render_header()
         
-        path = input(f"\n{Colors.Wh}Enter the path of file ==> ")
+        path = self.get_file_path()
 
         if path.strip() == "":
             print(f"{Colors.Ye}Returning to main menu...")
