@@ -81,8 +81,8 @@ class Gofile:
         
         try:
             folder_id = first_upload["parentFolder"]
-        except:
-            print("Failed to get folderId")
+        except KeyError:
+            print(f"Failed to get folderId Error details: {KeyError}")
             return results
 
         for file in files[1:]:

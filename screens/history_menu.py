@@ -12,6 +12,10 @@ class History:
 
     def show(self):
         self.render_header()
+        if not self.history:
+            print("No upload history found.")
+            input("Press Enter to return to the main menu...")
+            return
         self.table_view()
         number = input("\nEnter the Id of the file to view details or 'b' to go back: ")
         if number.lower() == 'b':
@@ -22,10 +26,6 @@ class History:
 
     def render_header(self):
         clear()
-        if not self.history:
-            print("No upload history found.")
-            input("Press Enter to return to the main menu...")
-            return
         print(f"{Colors.Cy}")
         tprint("Upload History")
         print(f"{Colors.Gr}")
@@ -50,29 +50,28 @@ class History:
             self.show()
             return
         for x in data:
-            if str(x[0]) == number:
-                print(f"{Colors.Cy}")
-                tprint(f"File Details")
-                print(f"{Colors.Gr}")
-                console = Console()
-                details_table = Table(title="File Details")
-                details_table.add_column("Property", style="cyan")
-                details_table.add_column("Value", style="green")
-                details_table.add_row("File ID", str(x[0]))
-                details_table.add_row("File Name", str(x[1]))
-                details_table.add_row("Original Path", str(x[2]))
-                details_table.add_row("Folder ID", str(x[3]))
-                details_table.add_row("Download Link", str(x[4]))
-                details_table.add_row("Size", format_size(x[5]))
-                details_table.add_row("File Type", str(x[6]))
-                details_table.add_row("Created at", str(x[7]))
-                console.print(details_table)
-                print(f"\n{Colors.Wh}1. Copy Download Link")
-                print(f"{Colors.Wh}2. Delete from History")
-                print(f"{Colors.Wh}3. Back to History")
-                print(f"{Colors.Wh}4. Back to Main Menu")
-                selector = input(f"\n{Colors.Wh}==> ")
-                self.handle_selection(selector, x, number)
+            print(f"{Colors.Cy}")
+            tprint(f"File Details")
+            print(f"{Colors.Gr}")
+            console = Console()
+            details_table = Table(title="File Details")
+            details_table.add_column("Property", style="cyan")
+            details_table.add_column("Value", style="green")
+            details_table.add_row("File ID", str(x[0]))
+            details_table.add_row("File Name", str(x[1]))
+            details_table.add_row("Original Path", str(x[2]))
+            details_table.add_row("Folder ID", str(x[3]))
+            details_table.add_row("Download Link", str(x[4]))
+            details_table.add_row("Size", format_size(x[5]))
+            details_table.add_row("File Type", str(x[6]))
+            details_table.add_row("Created at", str(x[7]))
+            console.print(details_table)
+            print(f"\n{Colors.Wh}1. Copy Download Link")
+            print(f"{Colors.Wh}2. Delete from History")
+            print(f"{Colors.Wh}3. Back to History")
+            print(f"{Colors.Wh}4. Back to Main Menu")
+            selector = input(f"\n{Colors.Wh}==> ")
+            self.handle_selection(selector, x, number)
 
     def handle_selection(self, selector, x, number):
         if selector == "1":

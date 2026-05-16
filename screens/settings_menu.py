@@ -31,7 +31,13 @@ class Settings:
                 print(f"{Colors.Re}Failed to change account status.")
             sleep(2)
         elif selector == "2":
-            print(f"{Colors.Ye}Coming soon...")
+            auto_save_status = self.config.toggle_auto_save()
+            if auto_save_status:
+                new_auto_save_value = self.config.get_auto_save()
+                print(f"{Colors.Gr}Auto Save History toggled successfully! New value: {new_auto_save_value}")
+            else:
+                print(f"{Colors.Re}Failed to toggle Auto Save History.")
+            input(f"{Colors.Ye}Press Enter to return to settings menu...")
             sleep(1)
         elif selector == "3":
             print(f"{Colors.Wh}Clearing history...")

@@ -10,6 +10,7 @@ class UploadFile:
         self.db = db
         self.config = Config()
         self.Token = self.config.get_token()
+        self.auto_save = self.config.get_auto_save()
         self.gofile_client = Gofile(token=self.Token) # Pass your token here if you have one
 
     def show(self):
@@ -35,14 +36,19 @@ class UploadFile:
             input(f"{Colors.Ye}Press Enter to return to main menu...")
             return
         
+        status_of_save_data_db = False
+        
         if path_check_result == "file":
             data = self.gofile_client.upload_file(path)
-            status_of_save_data_db = self.save_uploaded_data_core(data,path,"file")
+            if self.auto_save.lower() == 'true':
+                print(self.auto_save)
+                status_of_save_data_db = self.save_uploaded_data_core(data,path,"file")
             
         elif path_check_result == "directory":
             if self.Token is not None and self.config.get_account_status() == "active":
                 data = self.gofile_client.upload_folder(path)
-                status_of_save_data_db = self.save_uploaded_data_core(data,path,"directory")
+                if self.auto_save.lower() == 'true':
+                    status_of_save_data_db = self.save_uploaded_data_core(data,path,"directory")
             else:
                 print(f"{Colors.Re}Directory upload is only available for active accounts. Please check your account status or upload a file instead.")
                 input(f"{Colors.Ye}Press Enter to return to main menu...")
@@ -52,10 +58,11 @@ class UploadFile:
             input(f"{Colors.Ye}Press Enter to return to main menu...")
             return
 
-        if status_of_save_data_db:
+        if status_of_save_data_db and self.auto_save.lower() == 'true':
+            print(self.auto_save)
             print(f"{Colors.Gr}File uploaded and data saved to database successfully.")
         else:
-            print(f"{Colors.Re}File uploaded but failed to save data to database.")
+            print(f"{Colors.Re}File uploaded successfully")
 
         if path_check_result == "directory":
             print(f"\n{Colors.Gr}Directory Name: {data[0]['name']}")
